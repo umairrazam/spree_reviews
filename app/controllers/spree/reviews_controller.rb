@@ -15,21 +15,27 @@ module Spree
     end
 
     def create
-      params[:review][:rating].sub!(/\s*[^0-9]*\z/, '') unless params[:review][:rating].blank?
+      @is_user_give_review = spree_current_user.present? ? spree_current_user&.orders&.shipment_completed&.variant_exists(@product.variants_including_master.pluck(:id)) : ""
+      if @is_user_give_review.present?
+        params[:review][:rating].sub!(/\s*[^0-9]*\z/, '') unless params[:review][:rating].blank?
 
-      @review = Spree::Review.new(review_params)
-      @review.product = @product
-      @review.user = spree_current_user if spree_user_signed_in?
-      @review.ip_address = request.remote_ip
-      @review.locale = I18n.locale.to_s if Spree::Reviews::Config[:track_locale]
+        @review = Spree::Review.new(review_params)
+        @review.product = @product
+        @review.user = spree_current_user if spree_user_signed_in?
+        @review.ip_address = request.remote_ip
+        @review.locale = I18n.locale.to_s if Spree::Reviews::Config[:track_locale]
 
-      authorize! :create, @review
-      if @review.save
-        flash[:notice] = Spree.t(:review_successfully_submitted)
-        redirect_to spree.product_path(@product)
+        authorize! :create, @review
+        if @review.save
+          flash[:notice] = Spree.t(:review_successfully_submitted)
+          redirect_to spree.product_path(@product)
+        else
+          render :new
+        end
       else
-        render :new
-      end
+        flash[:alert] = "You need to checkout the product to share your review"
+        redirect_to spree.product_path(@product)
+      end  
     end
 
     private
