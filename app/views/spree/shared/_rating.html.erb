@@ -8,10 +8,6 @@
 <% rating_with_one    = reviews_count != 0  ? product.reviews.rating_with_one * 100 / reviews_count : 0 %>
 
 <div class="ratings">
-  <p class="product-review-description">
-    Let us know your thoughts on a product or view reviews from our members,
-    independent experts and other websites.
-  </p>
   <div class="d-flex">
     <p class="ratings-stars product-review-rating-stars">
       <% if product.reviews.count > 0 %>

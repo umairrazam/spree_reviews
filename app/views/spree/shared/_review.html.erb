@@ -1,19 +1,26 @@
-<div class="review mt-4" itemprop="reviews" itemscope itemtype="http://schema.org/Review">
-  <span class="reviews-rating" title="<%= txt_stars(review.rating) %>">
+<div class="review mb-3" itemprop="reviews" itemscope itemtype="http://schema.org/Review">
+  <div class="product-review-profile mb-2">
+    <%= image_tag 'https://images-na.ssl-images-amazon.com/images/S/amazon-avatars-global/9d98de89-7715-4554-b360-11d8de45f9ae._CR0,0,441,441_SX48_.jpg', class: 'product-review-profile-img' %>
+    <div class="text-center text-md-left add-to-cart-form-general-availability text-uppercase">J. Fernandez</div>
+  </div>
+  <div class="reviews-rating mb-2" title="<%= txt_stars(review.rating) %>">
     <%= render 'spree/reviews/stars', stars: review&.rating %>
-  </span>
-  <br>
-  <span itemprop="name"><strong><%= review&.title %></strong></span>
-  <br>
+  </div>
+  <div itemprop="name" class="font-weight-bold text-uppercase product-details-subtitle"><%= review&.title %></div>
   <div itemprop="reviewBody">
-    <p class="mb-1 product-review-description"><%= review.review %></p>
+    <div class="product-reviews">
+      <p class="collapse product-description mb-2" id="collapseExample" aria-expanded="false">
+        <%= review.review %>
+      </p>
+      <a role="button" class="collapsed qna__see__more" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample"></a>
+    </div>
   </div>
   <% if Spree::Reviews::Config[:feedback_rating] && (!Spree::Reviews::Config[:require_login] || spree_current_user) %>
     <div class="feedback_review my-3" id="feedback_review_<%= review.id %>">
-      <%= render 'spree/feedback_reviews/form', review: review %>
+      <%#= render 'spree/feedback_reviews/form', review: review %>
     </div>
   <% end %>
-  <span class="attribution product-review-attribution">
+  <span class="attribution product-description">
     <%#= Spree.t(:submitted_on) %>
     <%= l review.created_at.to_date %>
   </span>
@@ -29,4 +36,3 @@
     <span itemprop="author"><%= Spree.t(:anonymous) %></span>
   <% end %>
 </div>
-
