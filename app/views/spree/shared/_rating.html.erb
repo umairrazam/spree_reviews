@@ -10,17 +10,17 @@
 <div class="ratings">
   <div class="d-flex">
     <p class="ratings-stars product-review-rating-stars">
-      <% if product.reviews.count > 0 %>
-        <%= @average_rating.try(:round) %>
-      <% else %>
-        0
-      <% end %>
       <span title="<%= txt_stars(@average_rating) %>">
         <%= render 'spree/reviews/stars', stars: @average_rating.try(:round) %>
       </span>
+      <% if product.reviews.count > 0 %>
+        <%= @average_rating.try(:round) %> out of 5
+      <% else %>
+        0
+      <% end %>
     </p>
   </div>
-  <p class="ratings-basedupon product-review-basedupon"><%= Spree.t(:based_upon_review_count, count: reviews_count) %></p>
+  <p class="ratings-basedupon product-review-basedupon"><%= reviews_count %> global raitings</p>
 
   <div class="product-review-bars">
     <div class="product-review-bar">

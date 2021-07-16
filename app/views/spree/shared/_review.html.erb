@@ -1,7 +1,14 @@
+<% description = simple_format(review&.review, class: 'mb-0') %>
+<% short = truncate(description, separator: ' ', length: 200, escape: false) %>
 <div class="review mb-3" itemprop="reviews" itemscope itemtype="http://schema.org/Review">
   <div class="product-review-profile mb-2">
-    <%= image_tag 'https://images-na.ssl-images-amazon.com/images/S/amazon-avatars-global/9d98de89-7715-4554-b360-11d8de45f9ae._CR0,0,441,441_SX48_.jpg', class: 'product-review-profile-img' %>
-    <div class="text-center text-md-left add-to-cart-form-general-availability text-uppercase">J. Fernandez</div>
+    <% review_user_image = review&.user&.profile_image.present? ? review&.user&.profile_image : "" %>
+    <% if review_user_image.present? %>
+      <%= image_tag main_app.url_for(review_user_image), id:"profilePic" ,class: "product-review-profile-img" %>
+    <% else %>
+      <%= image_tag 'userprofile/profile-image.png', class: "product-review-profile-img" %>
+    <% end %>
+    <div class="text-center text-md-left add-to-cart-form-general-availability text-uppercase"><%= review&.user&.first_name %> <%= review&.user&.last_name %></div>
   </div>
   <div class="reviews-rating mb-2" title="<%= txt_stars(review.rating) %>">
     <%= render 'spree/reviews/stars', stars: review&.rating %>
@@ -9,10 +16,35 @@
   <div itemprop="name" class="font-weight-bold text-uppercase product-details-subtitle"><%= review&.title %></div>
   <div itemprop="reviewBody">
     <div class="product-reviews">
-      <p class="collapse product-description mb-2" id="collapseExample" aria-expanded="false">
+      <% if description == short %>
+        <%= description %>
+      <% else %>
+        <div class="js-readMore">
+          <%= tag.div class: "js-readMore-short" do %>
+            <%= short %>
+          <% end %>
+
+          <%= tag.div class: "js-readMore-full d-none" do %>
+            <%= description %>
+          <% end %>
+
+          <div>
+            <button class="qna__see__more btn btn-link px-0 js-readMore-showMore">
+              <i class="fa fa-angle-down" aria-hidden="true"></i>
+              Read More
+              
+            </button>
+            <button class="qna__see__more btn btn-link px-0 js-readMore-showLess d-none">
+              <i class="fa fa-angle-up" aria-hidden="true"></i>
+              Read Less
+            </button>
+          </div>
+        </div>
+      <% end %>
+      <!-- <p class="collapse product-description mb-2" id="collapseExample" aria-expanded="false">
         <%= review.review %>
       </p>
-      <a role="button" class="collapsed qna__see__more" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample"></a>
+      <a role="button" class="collapsed qna__see__more" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample"></a> -->
     </div>
   </div>
   <% if Spree::Reviews::Config[:feedback_rating] && (!Spree::Reviews::Config[:require_login] || spree_current_user) %>
