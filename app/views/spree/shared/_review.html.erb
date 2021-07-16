@@ -10,7 +10,7 @@
     <% end %>
     <div class="text-center text-md-left add-to-cart-form-general-availability text-uppercase"><%= review&.user&.first_name %> <%= review&.user&.last_name %></div>
   </div>
-  <div class="reviews-rating mb-2" title="<%= txt_stars(review.rating) %>">
+  <div class="reviews-rating mb-2" title="<%#= txt_stars(review.rating) %>">
     <%= render 'spree/reviews/stars', stars: review&.rating %>
   </div>
   <div itemprop="name" class="font-weight-bold text-uppercase product-details-subtitle"><%= review&.title %></div>
