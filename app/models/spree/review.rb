@@ -37,6 +37,10 @@ class Spree::Review < ActiveRecord::Base
     ((feedback_reviews.sum(:rating) / feedback_reviews.size) + 0.5).floor
   end
 
+  def update_product
+    product.touch
+  end  
+
   def recalculate_product_rating
     product.recalculate_rating if product.present?
   end

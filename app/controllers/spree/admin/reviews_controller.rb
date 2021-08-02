@@ -10,6 +10,7 @@ module Spree
       def approve
         review = Spree::Review.find(params[:id])
         if review.update_attribute(:approved, true)
+          review.update_product
           flash[:notice] = Spree.t(:info_approve_review)
         else
           flash[:error] = Spree.t(:error_approve_review)
